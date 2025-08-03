@@ -1,0 +1,49 @@
+# encoding: utf-8
+# 2023 R2
+SetScriptVersion(Version="23.2.142")
+template1 = GetTemplate(
+    TemplateName="Static Structural",
+    Solver="ANSYS")
+system1 = template1.CreateSystem()
+EngData.EnableFilter(Enable=False)
+favorites1 = EngData.LoadFavoriteItems()
+library1 = EngData.OpenLibrary(
+    Name="ANSYS GRANTA Materials Data for Simulation (Sample)",
+    Source="Granta_Design_Typical_Materials.xml")
+library2 = EngData.OpenLibrary(
+    Name="General Materials",
+    Source="General_Materials.xml")
+library3 = EngData.OpenLibrary(
+    Name="Additive Manufacturing Materials",
+    Source="Additive_Manufacturing_Materials.xml")
+engineeringData1 = system1.GetContainer(ComponentName="Engineering Data")
+material1 = engineeringData1.GetMaterial(Name="Structural Steel")
+material1.Delete()
+matl1 = engineeringData1.ImportMaterial(
+    Name="316 Stainless Steel",
+    Source="Additive_Manufacturing_Materials.xml")
+matlProp1 = matl1.CreateProperty(
+    Name="S-N Curve",
+    Qualifiers={"Definition": "", "Behavior": ""})
+matl2 = engineeringData1.ImportMaterial(
+    Name="Ti-6Al-4V",
+    Source="Additive_Manufacturing_Materials.xml")
+matlProp2 = matl2.CreateProperty(
+    Name="S-N Curve",
+    Qualifiers={"Definition": "", "Behavior": ""})
+matlProp2.SetQualifier(
+    Qualifier="Interpolation",
+    Value="Semi-Log")
+materialPropertyData1 = matlProp2.GetPropertyData(
+    Name="S-N Curve",
+    Qualifiers={"Definition": "", "Behavior": "", "Interpolation": "Semi-Log"})
+dataProvider1 = materialPropertyData1.CreateDataProvider(Format="Delimited Text")
+dataProvider1.FileName = r"D:\XinyueZhang\DE2\Finite element\Titanium S-N.csv"
+dataProvider1.ReadLine = 2
+dataProvider1.Columns = [1, 2]
+dataProvider1.Delimiter = ","
+dataProvider1.VariableNames = ["Cycles", "Alternating Stress"]
+dataProvider1.VariableUnits = ["", "Pa"]
+dataProvider1.Import()
+Save(Overwrite=True)
+Save(Overwrite=True)

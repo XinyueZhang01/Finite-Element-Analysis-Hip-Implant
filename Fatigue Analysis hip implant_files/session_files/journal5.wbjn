@@ -1,0 +1,59 @@
+# encoding: utf-8
+# 2023 R2
+SetScriptVersion(Version="23.2.142")
+system1 = GetSystem(Name="SYS")
+model1 = system1.GetContainer(ComponentName="Model")
+model1.Edit()
+favorites1 = EngData.LoadFavoriteItems()
+EngData.EnableFilter(Enable=False)
+engineeringData1 = system1.GetContainer(ComponentName="Engineering Data")
+material1 = engineeringData1.GetMaterial(Name="Ti-6Al-4V")
+material1.Delete()
+EngData.EnableFilter()
+EngData.EnableFilter(Enable=False)
+EngData.EnableFilter()
+engineeringData1.Import(
+    Source="D:/XinyueZhang/DE2/Finite element/Titanium.xml",
+    Company="ANSYS",
+    ProviderName="Disk")
+material2 = engineeringData1.GetMaterial(Name="316 Stainless Steel")
+material2.Delete()
+engineeringData1.Import(
+    Source="D:/XinyueZhang/DE2/Finite element/stainless steel 316L.xml",
+    Company="ANSYS",
+    ProviderName="Disk")
+Save(Overwrite=True)
+modelComponent1 = system1.GetComponent(Name="Model")
+modelComponent1.Refresh()
+model1.Edit()
+Save(Overwrite=True)
+template1 = GetTemplate(
+    TemplateName="Modal",
+    Solver="ANSYS")
+engineeringDataComponent1 = system1.GetComponent(Name="Engineering Data")
+geometryComponent1 = system1.GetComponent(Name="Geometry")
+system2 = template1.CreateSystem(
+    ComponentsToShare=[engineeringDataComponent1, geometryComponent1, modelComponent1],
+    Position="Right",
+    RelativeTo=system1)
+solutionComponent1 = system1.GetComponent(Name="Solution")
+setupComponent1 = system2.GetComponent(Name="Setup")
+solutionComponent1.TransferData(TargetComponent=setupComponent1)
+setupComponent1.Update(AllDependencies=True)
+Save(Overwrite=True)
+model1.Exit()
+setup1 = system2.GetContainer(ComponentName="Setup")
+setup1.Edit()
+model1.Exit()
+model1.Edit()
+model1.Exit()
+model1.Edit()
+model1.Edit()
+model1.Exit()
+model1.Edit()
+Save(Overwrite=True)
+Save(Overwrite=True)
+Save(Overwrite=True)
+Save(Overwrite=True)
+model1.Exit()
+Save(Overwrite=True)

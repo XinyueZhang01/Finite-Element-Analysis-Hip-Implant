@@ -1,0 +1,149 @@
+# encoding: utf-8
+# 2023 R2
+SetScriptVersion(Version="23.2.142")
+system1 = GetSystem(Name="SYS")
+engineeringData1 = system1.GetContainer(ComponentName="Engineering Data")
+material1 = engineeringData1.GetMaterial(Name="316 Stainless Steel")
+matlProp1 = material1.GetProperty(Name="S-N Curve")
+matlProp1.SetQualifier(
+    Qualifier="Interpolation",
+    Value="Semi-Log")
+matlProp1.BeginBatchUpdate()
+matlProp1.SetVariableProperty(
+    SheetName="S-N Curve",
+    SheetQualifiers={"Definition": "", "Behavior": "", "Interpolation": "Semi-Log"},
+    VariableName="Alternating Stress",
+    Property="Unit",
+    Value="MPa")
+matlProp1.EndBatchUpdate()
+materialPropertyData1 = matlProp1.GetPropertyData(
+    Name="S-N Curve",
+    Qualifiers={"Definition": "", "Behavior": "", "Interpolation": "Semi-Log"})
+dataProvider1 = materialPropertyData1.CreateDataProvider(Format="Delimited Text")
+dataProvider1.FileName = r"D:\downloads\Stainless Steel SN curve.csv"
+dataProvider1.ReadLine = 2
+dataProvider1.Columns = [1, 2]
+dataProvider1.Delimiter = ","
+dataProvider1.VariableNames = ["Cycles", "Alternating Stress"]
+dataProvider1.VariableUnits = ["", "MPa"]
+dataProvider1.Import()
+Save(Overwrite=True)
+material2 = engineeringData1.GetMaterial(Name="Ti-6Al-4V")
+matlProp2 = material2.GetProperty(Name="S-N Curve")
+matlProp2.BeginBatchUpdate()
+matlProp2.SetVariableProperty(
+    SheetName="S-N Curve",
+    SheetQualifiers={"Definition": "", "Behavior": "", "Interpolation": "Semi-Log"},
+    VariableName="Alternating Stress",
+    Property="Unit",
+    Value="MPa")
+matlProp2.SetData(
+    SheetName="S-N Curve",
+    SheetQualifiers={"Definition": "", "Behavior": "", "Interpolation": "Semi-Log"},
+    Variables=["Alternating Stress"],
+    Values=[["0.0008008988729 [MPa]", "0.0007833707842 [MPa]", "0.0007635955081 [MPa]", "0.00075011236299999989 [MPa]", "0.00073573033459999992 [MPa]", "0.00072044944369999988 [MPa]", "0.0007096629275 [MPa]", "0.00069932584269999994 [MPa]", "0.0006925842702 [MPa]", "0.00068179775409999994 [MPa]", "0.0006683146089 [MPa]", "0.0006593258386 [MPa]", "0.0006462921453999999 [MPa]", "0.0006355056293 [MPa]", "0.0006251685445 [MPa]", "0.00061303371379999993 [MPa]", "0.0006022471977 [MPa]", "0.0005919101129 [MPa]", "0.0005806741449 [MPa]", "0.0005707865326 [MPa]", "0.0005608988791 [MPa]", "0.0005519101293999999 [MPa]", "0.0005429213385 [MPa]", "0.0005317202428 [MPa]", "0.0005235102674 [MPa]", "0.000513711204 [MPa]", "0.0005065605862 [MPa]", "0.0004996747924 [MPa]", "0.0004927889985 [MPa]", "0.00048616802869999993 [MPa]", "0.0004816657741 [MPa]", "0.0004779580326 [MPa]", "0.0004742502912 [MPa]", "0.00046921838860000003 [MPa]", "0.000464451269 [MPa]", "0.0004599490144 [MPa]", "0.0004580951642 [MPa]", "0.0004565060969 [MPa]", "0.0004535929097 [MPa]", "0.0004517390184 [MPa]", "0.0004494382263 [MPa]", "0.00045033708890000003 [MPa]", "0.00044988763699999995 [MPa]", "0.00044808991179999996 [MPa]", "0.0004476404599 [MPa]", "0.00044629214539999997 [MPa]", "0.00044629214539999997 [MPa]", "0.0004458426935 [MPa]", "0.0004449438309 [MPa]", "0.0004440449682 [MPa]", "0.0004440449682 [MPa]", "0.00044359551629999996 [MPa]", "0.0004426966537 [MPa]", "0.0004422472018 [MPa]"]])
+matlProp2.EndBatchUpdate()
+matlProp2.Delete()
+matlProp3 = material2.CreateProperty(
+    Name="S-N Curve",
+    Qualifiers={"Definition": "", "Behavior": ""})
+materialPropertyData2 = matlProp3.GetPropertyData(
+    Name="S-N Curve",
+    Qualifiers={"Definition": "", "Behavior": "", "Interpolation": "Log-Log"})
+dataProvider2 = materialPropertyData2.CreateDataProvider(Format="Delimited Text")
+matlProp3.SetQualifier(
+    Qualifier="Interpolation",
+    Value="Semi-Log")
+dataProvider3 = materialPropertyData2.CreateDataProvider(Format="Delimited Text")
+dataProvider3.FileName = r"D:\XinyueZhang\DE2\Finite element\Titanium S-N.csv"
+dataProvider3.ReadLine = 2
+dataProvider3.Columns = [1, 2]
+dataProvider3.Delimiter = ","
+dataProvider3.VariableNames = ["Cycles", "Alternating Stress"]
+dataProvider3.VariableUnits = ["", "MPa"]
+dataProvider3.Import()
+Save(Overwrite=True)
+Save(Overwrite=True)
+geometry1 = system1.GetContainer(ComponentName="Geometry")
+geometry1.SetFile(FilePath="D:/XinyueZhang/DE2/Finite element/Hip Implant unrevised.IGS")
+modelComponent1 = system1.GetComponent(Name="Model")
+modelComponent1.Refresh()
+model1 = system1.GetContainer(ComponentName="Model")
+model1.Edit()
+model1.Exit()
+model1.Edit()
+model1.Exit()
+model1.Edit()
+model1.Exit()
+model1.Edit()
+model1.Exit()
+Save(Overwrite=True)
+model1.Edit()
+Save(Overwrite=True)
+model1.Exit()
+geometry1.SetFile(FilePath="D:/XinyueZhang/DE2/Finite element/Hip Implant unrevised.IGS")
+model1.Edit()
+model1.Exit()
+geometry1.SetFile(FilePath="D:/XinyueZhang/DE2/Finite element/Hip Implant unrevised.IGS")
+geometry1.Edit(IsDiscoveryGeometry=True)
+geometry1.Exit()
+geometry1.SetFile(FilePath="D:/downloads/Hip Implant.IGS")
+modelComponent1.Refresh()
+model1.Edit()
+model1.Exit()
+geometry1.Edit(IsDiscoveryGeometry=True)
+geometry1.Exit()
+geometry1.SetFile(FilePath="D:/downloads/Hip Implant.IGS")
+geometry1.Edit()
+Save(Overwrite=True)
+Save(Overwrite=True)
+Save(Overwrite=True)
+Save(Overwrite=True)
+geometry1.Exit()
+modelComponent1.Refresh()
+model1.Edit()
+Save(Overwrite=True)
+Save(Overwrite=True)
+model1.Exit()
+model1.Edit()
+model1.Exit()
+model1.Edit()
+model1.Exit()
+model1.Edit()
+model1.Exit()
+model1.Edit()
+model1.Exit()
+model1.Edit()
+model1.Exit()
+model1.Edit()
+model1.Exit()
+model1.Edit()
+model1.Exit()
+model1.Edit()
+model1.Exit()
+model1.Edit()
+model1.Exit()
+geometry1.SetFile(FilePath="D:/downloads/Hip Implant separated.IGS")
+geometry1.Edit()
+geometry1.Exit()
+geometry1.SetFile(FilePath="D:/downloads/Hip Implant separated.IGS")
+geometry1.Edit()
+geometry1.Exit()
+modelComponent1.Refresh()
+model1.Edit()
+model1.Exit()
+geometry1.SetFile(FilePath="D:/downloads/Hip Implant separated.IGS")
+modelComponent1.Refresh()
+model1.Edit()
+geometry1.Edit()
+geometry1.Exit()
+model1.Exit()
+geometry1.SetFile(FilePath="D:/downloads/Hip Implant.IGS")
+geometry1.SetFile(FilePath="D:/downloads/Hip Implant separated.STEP")
+modelComponent1.Refresh()
+model1.Edit()
+geometry1.SetFile(FilePath="D:/downloads/Hip Implant one part.STEP")
+model1.Edit()
+geometry1.Edit()
+geometry1.Exit()
+modelComponent1.Update(AllDependencies=True)
